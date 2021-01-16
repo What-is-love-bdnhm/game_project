@@ -8,10 +8,10 @@ class Player:
         self.x, self.y = player_pos
         self.angle = player_angle
 
-    def pos(self):
+    def pos(self): # возвращает позицию игрока
         return (self.x, self.y)
 
-    def movement(self):
+    def movement(self): # функция отвечает за управление
         sin_a = math.sin(self.angle)
         cos_a = math.cos(self.angle)
         keys = pygame.key.get_pressed()
