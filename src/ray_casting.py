@@ -1,20 +1,22 @@
 import pygame
-import math
 from settings import *
 from map import world_map
 
 
-def mapping(x, y):
-    return (x // TILE) * TILE, (y // TILE) * TILE
+def mapping(a, b):
+    return (a // TILE) * TILE, (b // TILE) * TILE
 
 
-def ray_casting(screen, player_pos, player_angle, textures):
-    ox, oy = player_pos
+def ray_casting(player, textures):
+    walls = []
+    ox, oy = player.pos()
     xm, ym = mapping(ox, oy)
-    cur_angle = player_angle - HALF_FOV
+    cur_angle = player.angle - HALF_FOV
     for ray in range(NUM_RAYS):
         sin_a = math.sin(cur_angle)
         cos_a = math.cos(cur_angle)
+        sin_a = sin_a if sin_a else 0.000001
+        cos_a = cos_a if cos_a else 0.000001
 
         # вертикали
         x, dx = (xm + TILE, 1) if cos_a >= 0 else (xm, -1)
@@ -30,23 +32,25 @@ def ray_casting(screen, player_pos, player_angle, textures):
         # горизонтали
         y, dy = (ym + TILE, 1) if sin_a >= 0 else (ym, -1)
         for i in range(0, HEIGHT, TILE):
-            depth_g = (y - oy) / sin_a
-            xh = ox + depth_g * cos_a
+            depth_h = (y - oy) / sin_a
+            xh = ox + depth_h * cos_a
             tile_h = mapping(xh, y + dy)
             if tile_h in world_map:
                 texture_h = world_map[tile_h]
                 break
             y += dy * TILE
 
-        # проектирование
-        depth, offset, texture = (depth_v, yv, texture_v) if depth_v < depth_g else (depth_g, xh, texture_h)
+        # проекция
+        depth, offset, texture = (depth_v, yv, texture_v) if depth_v < depth_h else (depth_h, xh, texture_h)
         offset = int(offset) % TILE
-        depth *= math.cos(player_angle - cur_angle)
+        depth *= math.cos(player.angle - cur_angle)
         depth = max(depth, 0.00001)
         proj_height = min(int(PROJ_COEFF / depth), 2 * HEIGHT)
 
         wall_column = textures[texture].subsurface(offset * TEXTURE_SCALE, 0, TEXTURE_SCALE, TEXTURE_HEIGHT)
         wall_column = pygame.transform.scale(wall_column, (SCALE, proj_height))
-        screen.blit(wall_column, (ray * SCALE, HALF_HEIGHT - proj_height // 2))
+        wall_pos = (ray * SCALE, HALF_HEIGHT - proj_height // 2)
 
+        walls.append((depth, wall_column, wall_pos))
         cur_angle += DELTA_ANGLE
+    return walls
