@@ -6,21 +6,56 @@ from collections import deque
 class Sprites:
     def __init__(self):
         self.sprite_parameters = {
+            'sprite_barrel': {
+                'sprite': pygame.image.load('sprites/barrel/base/0.png').convert_alpha(),
+                'viewing_angles': None,
+                'shift': 1.8,
+                'scale': 0.4,
+                'animation': deque(
+                    [pygame.image.load(f'sprites/barrel/anim/{i}.png').convert_alpha() for i in range(12)]),
+                'animation_dist': 800,
+                'animation_speed': 10,
+            },
+            'sprite_pin': {
+                'sprite': pygame.image.load('sprites/pin/base/0.png').convert_alpha(),
+                'viewing_angles': None,
+                'shift': 0.6,
+                'scale': 0.6,
+                'animation': deque([pygame.image.load(f'sprites/pin/anim/{i}.png').convert_alpha() for i in range(8)]),
+                'animation_dist': 800,
+                'animation_speed': 10,
+                'blocked': True,
+            },
             'sprite_devil': {
-                'sprite': [pygame.image.load(f'../spr/devil/base/{i}.png').convert_alpha() for i in range(8)],
+                'sprite': [pygame.image.load(f'sprites/devil/base/{i}.png').convert_alpha() for i in range(8)],
                 'viewing_angles': True,
                 'shift': -0.2,
                 'scale': 1.1,
                 'animation': deque(
-                    [pygame.image.load(f'../spr/devil/anim/{i}.png').convert_alpha() for i in range(9)]),
+                    [pygame.image.load(f'sprites/devil/anim/{i}.png').convert_alpha() for i in range(9)]),
                 'animation_dist': 150,
                 'animation_speed': 10,
                 'blocked': True,
             },
+            'sprite_flame': {
+                'sprite': pygame.image.load('sprites/flame/base/0.png').convert_alpha(),
+                'viewing_angles': None,
+                'shift': 0.7,
+                'scale': 0.6,
+                'animation': deque(
+                    [pygame.image.load(f'sprites/flame/anim/{i}.png').convert_alpha() for i in range(16)]),
+                'animation_dist': 800,
+                'animation_speed': 5,
+                'blocked': None,
+            },
         }
 
         self.list_of_objects = [
+            SpriteObject(self.sprite_parameters['sprite_barrel'], (7.1, 2.1)),
+            SpriteObject(self.sprite_parameters['sprite_barrel'], (5.9, 2.1)),
+            SpriteObject(self.sprite_parameters['sprite_pin'], (8.7, 2.5)),
             SpriteObject(self.sprite_parameters['sprite_devil'], (7, 4)),
+            SpriteObject(self.sprite_parameters['sprite_flame'], (8.6, 5.6))
         ]
 
 
@@ -33,11 +68,8 @@ class SpriteObject:
         self.animation = parameters['animation'].copy()
         self.animation_dist = parameters['animation_dist']
         self.animation_speed = parameters['animation_speed']
-        self.blocked = parameters['blocked']
-        self.side = 30
         self.animation_count = 0
-        self.x, self.y = pos[0] * TILE, pos[1] * TILE
-        self.pos = self.x - self.side // 2, self.y - self.side // 2
+        self.pos = self.x, self.y = pos[0] * TILE, pos[1] * TILE
         if self.viewing_angles:
             self.sprite_angles = [frozenset(range(i, i + 45)) for i in range(0, 360, 45)]
             self.sprite_positions = {angle: pos for angle, pos in zip(self.sprite_angles, self.object)}
@@ -61,7 +93,7 @@ class SpriteObject:
             proj_height = min(int(PROJ_COEFF / distance_to_sprite * self.scale), DOUBLE_HEIGHT)
             half_proj_height = proj_height // 2
             shift = half_proj_height * self.shift
-            # выбор спрайта исходя из угла обзора
+            # choosing sprite for angle
             if self.viewing_angles:
                 if theta < 0:
                     theta += DOUBLE_PI
@@ -72,7 +104,7 @@ class SpriteObject:
                         self.object = self.sprite_positions[angles]
                         break
 
-            # анимация спрайтов
+            # sprite animation
             sprite_object = self.object
             if self.animation and distance_to_sprite < self.animation_dist:
                 sprite_object = self.animation[0]
@@ -82,7 +114,7 @@ class SpriteObject:
                     self.animation.rotate()
                     self.animation_count = 0
 
-            # позиция спрайта
+            # sprite scale and pos
             sprite_pos = (current_ray * SCALE - half_proj_height, HALF_HEIGHT - half_proj_height + shift)
             sprite = pygame.transform.scale(sprite_object, (proj_height, proj_height))
             return (distance_to_sprite, sprite, sprite_pos)

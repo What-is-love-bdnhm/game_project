@@ -8,8 +8,10 @@ class Drawing:
         self.sc = sc
         self.sc_map = sc_map
         self.font = pygame.font.SysFont('Arial', 36, bold=True)
-        self.textures = {'1': pygame.image.load('../res/wall1.png').convert(),
-                         '2': pygame.image.load('../res/wall2.png').convert(),
+        self.textures = {1: pygame.image.load('../res/wall3.png').convert(),
+                         2: pygame.image.load('../res/wall4.png').convert(),
+                         3: pygame.image.load('../res/wall5.png').convert(),
+                         4: pygame.image.load('../res/wall6.png').convert(),
                          'S': pygame.image.load('../res/sky.png').convert()
                          }
 
@@ -28,7 +30,7 @@ class Drawing:
 
     def fps(self, clock):
         display_fps = str(int(clock.get_fps()))
-        render = self.font.render(display_fps, 0, YELLOW)
+        render = self.font.render(display_fps, 0, DARKORANGE)
         self.sc.blit(render, FPS_POS)
 
     def mini_map(self, player):
