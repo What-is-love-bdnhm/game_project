@@ -13,21 +13,20 @@ sc_map = pygame.Surface(MINIMAP_RES)
 sprites = Sprites()
 clock = pygame.time.Clock()
 player = Player(sprites)
-drawing = Drawing(sc, sc_map)
+drawing = Drawing(sc, sc_map, player)
 
 
 while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            exit()
+
     player.movement()
-    sc.fill(BLACK)
+
 
     drawing.background(player.angle)
-    walls = ray_casting(player, drawing.textures)
+    walls, wall_shot = ray_casting_walls(player, drawing.textures)
     drawing.world(walls + [obj.object_locate(player) for obj in sprites.list_of_objects])
     drawing.fps(clock)
     drawing.mini_map(player)
+    drawing.player_weapon([wall_shot, sprites.sprite_shot])
 
     pygame.display.flip()
     clock.tick(FPS)
