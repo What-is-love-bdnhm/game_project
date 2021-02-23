@@ -9,10 +9,8 @@ class Player:
         self.sprites = sprites
         self.angle = player_angle
         self.sensitivity = 0.004
-        # collision parameters
         self.side = 50
         self.rect = pygame.Rect(*player_pos, self.side, self.side)
-        # оружие
         self.shot = False
 
     @property
