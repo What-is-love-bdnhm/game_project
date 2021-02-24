@@ -116,35 +116,25 @@ class SpriteObject:
 
         delta_rays = int(gamma / DELTA_ANGLE)
         self.current_ray = CENTER_RAY + delta_rays
-        if self.flag not in {'door_h', 'door_v'}:
-            self.distance_to_sprite *= math.cos(HALF_FOV - self.current_ray * DELTA_ANGLE)
 
         fake_ray = self.current_ray + FAKE_RAYS
         if 0 <= fake_ray <= FAKE_RAYS_RANGE and self.distance_to_sprite > 30:
-            self.proj_height = min(int(PROJ_COEFF / self.distance_to_sprite),
-                                   DOUBLE_HEIGHT if self.flag not in {'door_h', 'door_v'} else HEIGHT)
+            self.proj_height = min(int(PROJ_COEFF / self.distance_to_sprite), HEIGHT)
             sprite_width = int(self.proj_height * self.scale[0])
             sprite_height = int(self.proj_height * self.scale[1])
             half_sprite_width = sprite_width // 2
             half_sprite_height = sprite_height // 2
             shift = half_sprite_height * self.shift
 
-            # logic for doors, npc, decor
-            if self.flag in {'door_h', 'door_v'}:
-                if self.door_open_trigger:
-                    self.open_door()
+            if self.is_dead and self.is_dead != 'immortal':
+                sprite_object = self.dead_animation()
+                shift = half_sprite_height * self.dead_shift
+                sprite_height = int(sprite_height / 1.3)
+            elif self.npc_action_trigger:
+                sprite_object = self.npc_in_action()
+            else:
                 self.object = self.visible_sprite()
                 sprite_object = self.sprite_animation()
-            else:
-                if self.is_dead and self.is_dead != 'immortal':
-                    sprite_object = self.dead_animation()
-                    shift = half_sprite_height * self.dead_shift
-                    sprite_height = int(sprite_height / 1.3)
-                elif self.npc_action_trigger:
-                    sprite_object = self.npc_in_action()
-                else:
-                    self.object = self.visible_sprite()
-                    sprite_object = self.sprite_animation()
 
             sprite_pos = (self.current_ray * SCALE - half_sprite_width, HALF_HEIGHT - half_sprite_height + shift)
             sprite = pygame.transform.scale(sprite_object, (sprite_width, sprite_height))

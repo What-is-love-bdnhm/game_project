@@ -32,7 +32,7 @@ while True:
     interaction.npc_action()
     interaction.clear_world()
 
-    pygame.draw.circle(sc, (0,255,0), (HALF_WIDTH, HALF_HEIGHT), 5)
+    pygame.draw.circle(sc, (0,255,0), (HALF_WIDTH, HALF_HEIGHT), 5, 1)
 
     pygame.display.flip()
     clock.tick()
