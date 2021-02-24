@@ -8,14 +8,14 @@ class Sprites:
     def __init__(self):
         self.sprite_parameters = {
             'npc_devil': {
-                'sprite': [pygame.image.load(f'../spr/devil/base/{i}.png').convert_alpha() for i in range(8)],
+                'sprite': [pygame.image.load(f'../spr/npc/devil1/base/{i}.png').convert_alpha() for i in range(8)],
                 'viewing_angles': True,
                 'shift': 0.0,
                 'scale': (1.1, 1.1),
                 'side': 50,
                 'animation': [],
-                'death_animation': deque([pygame.image.load(f'../spr/devil/death/{i}.png')
-                                         .convert_alpha() for i in range(6)]),
+                'death_animation': deque([pygame.image.load(f'../spr/npc/devil1/death/{i}.png')
+                                         .convert_alpha() for i in range(11)]),
                 'is_dead': None,
                 'dead_shift': 0.6,
                 'animation_dist': None,
@@ -23,7 +23,7 @@ class Sprites:
                 'blocked': True,
                 'flag': 'npc',
                 'obj_action': deque(
-                    [pygame.image.load(f'../spr/devil/anim/{i}.png').convert_alpha() for i in range(9)]),
+                    [pygame.image.load(f'../spr/npc/devil1/action/{i}.png').convert_alpha() for i in range(5)]),
             },
             'npc_soldier0': {
                 'sprite': [pygame.image.load(f'../spr/npc/soldier0/base/{i}.png').convert_alpha() for i in
@@ -43,16 +43,34 @@ class Sprites:
                 'flag': 'npc',
                 'obj_action': deque([pygame.image.load(f'../spr/npc/soldier0/action/{i}.png')
                                     .convert_alpha() for i in range(4)])},
+            'npc_soldier1': {
+                'sprite': [pygame.image.load(f'../spr/npc/soldier1/base/{i}.png').convert_alpha() for i in
+                           range(8)],
+                'viewing_angles': True,
+                'shift': 0.8,
+                'scale': (0.4, 0.6),
+                'side': 30,
+                'animation': [],
+                'death_animation': deque([pygame.image.load(f'../spr/npc/soldier1/death/{i}.png')
+                                         .convert_alpha() for i in range(10)]),
+                'is_dead': None,
+                'dead_shift': 1.7,
+                'animation_dist': None,
+                'animation_speed': 10,
+                'blocked': True,
+                'flag': 'npc',
+                'obj_action': deque([pygame.image.load(f'../spr/npc/soldier1/action/{i}.png')
+                                    .convert_alpha() for i in range(4)])},
         }
 
         self.list_of_objects = [
             SpriteObject(self.sprite_parameters['npc_devil'], (7, 4)),
             SpriteObject(self.sprite_parameters['npc_soldier0'], (2.5, 1.5)),
-            SpriteObject(self.sprite_parameters['npc_soldier0'], (5.51, 1.5)),
+            SpriteObject(self.sprite_parameters['npc_soldier1'], (5.51, 1.5)),
             SpriteObject(self.sprite_parameters['npc_soldier0'], (6.61, 2.92)),
-            SpriteObject(self.sprite_parameters['npc_soldier0'], (7.68, 1.47)),
+            SpriteObject(self.sprite_parameters['npc_soldier1'], (7.68, 1.47)),
             SpriteObject(self.sprite_parameters['npc_soldier0'], (8.75, 3.65)),
-            SpriteObject(self.sprite_parameters['npc_soldier0'], (1.27, 11.5)),
+            SpriteObject(self.sprite_parameters['npc_soldier1'], (1.27, 11.5)),
             SpriteObject(self.sprite_parameters['npc_soldier0'], (1.26, 8.29)),
         ]
 
