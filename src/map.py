@@ -35,6 +35,7 @@ WORLD_HEIGHT = len(matrix_map) * TILE
 world_map = {}
 mini_map = set()
 collision_walls = []
+# анализ карты(для возможности изменения карты свыше)
 for j, row in enumerate(matrix_map):
     for i, char in enumerate(row):
         if char:

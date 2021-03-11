@@ -6,6 +6,7 @@ def mapping(a, b):
     return (a // TILE) * TILE, (b // TILE) * TILE
 
 
+# анализ видимой местности
 def ray_casting(player_pos, player_angle, world_map):
     casted_walls = []
     ox, oy = player_pos
@@ -51,6 +52,7 @@ def ray_casting(player_pos, player_angle, world_map):
         cur_angle += DELTA_ANGLE
     return casted_walls
 
+# укомплектация видимых объектов в более удобную форму для последующей работы
 def ray_casting_walls(player, textures):
     casted_walls = ray_casting(player.pos, player.angle, world_map)
     wall_shot = casted_walls[CENTER_RAY][0], casted_walls[CENTER_RAY][2]

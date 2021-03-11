@@ -41,9 +41,9 @@ HALF_TEXTURE_HEIGHT = TEXTURE_HEIGHT // 2
 TEXTURE_SCALE = TEXTURE_WIDTH // TILE
 
 # игрок
-player_pos = (HALF_WIDTH // 4, HALF_HEIGHT - 50)
+player_pos = (125, 125)
 player_angle = 0
-player_speed = 4
+player_speed = 5
 
 # цвета
 WHITE = (255, 255, 255)

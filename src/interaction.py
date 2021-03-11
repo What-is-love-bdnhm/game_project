@@ -4,6 +4,7 @@ from ray_casting import mapping
 import math
 import pygame
 
+
 def ray_casting_npc_player(npc_x, npc_y, world_map, player_pos):
     ox, oy = player_pos
     xm, ym = mapping(ox, oy)
@@ -45,6 +46,7 @@ class Interaction:
         self.drawing = drawing
         self.pain_sound = pygame.mixer.Sound('../sound/pain.wav')
 
+    # проверка на взаимодействие с объектами
     def interaction_objects(self):
         if self.player.shot and self.drawing.shot_animation_trigger:
             for obj in sorted(self.sprites.list_of_objects, key=lambda obj: obj.distance_to_sprite):
@@ -59,6 +61,7 @@ class Interaction:
                             self.drawing.shot_animation_trigger = False
                     break
 
+    # движение нпс в зоне видимости игрока
     def npc_action(self):
         for obj in self.sprites.list_of_objects:
             if obj.flag == 'npc' and not obj.is_dead:
@@ -68,6 +71,7 @@ class Interaction:
                 else:
                     obj.npc_action_trigger = False
 
+    # изменение координат нпс при передвижении
     def npc_move(self, obj):
         if abs(obj.distance_to_sprite) > TILE:
             dx = obj.x - self.player.pos[0]
@@ -75,23 +79,14 @@ class Interaction:
             obj.x = obj.x + 1 if dx < 0 else obj.x - 1
             obj.y = obj.y + 1 if dy < 0 else obj.y - 1
 
+    # удаление объектов из списка для анализа
     def clear_world(self):
         deleted_objects = self.sprites.list_of_objects[:]
         [self.sprites.list_of_objects.remove(obj) for obj in deleted_objects if obj.delete]
 
+    # музыка на фоне
     def play_music(self):
         pygame.mixer.pre_init(44100, -16, 2, 2048)
         pygame.mixer.init()
         pygame.mixer.music.load('../sound/theme.mp3')
         pygame.mixer.music.play(10)
-
-    def check_win(self):
-        if not len([obj for obj in self.sprites.list_of_objects if obj.flag == 'npc' and not obj.is_dead]):
-            pygame.mixer.music.stop()
-            pygame.mixer.music.load('../sound/win.mp3')
-            pygame.mixer.music.play()
-            while True:
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        exit()
-                self.drawing.win()

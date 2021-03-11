@@ -17,11 +17,13 @@ class Player:
     def pos(self):
         return (self.x, self.y)
 
+    # список объектов
     @property
     def collision_list(self):
         return collision_walls + [pygame.Rect(*obj.pos, obj.side, obj.side) for obj in
                                   self.sprites.list_of_objects if obj.blocked]
 
+    # проверка на столкновения
     def detect_collision(self, dx, dy):
         next_rect = self.rect.copy()
         next_rect.move_ip(dx, dy)
@@ -55,6 +57,7 @@ class Player:
         self.rect.center = self.x, self.y
         self.angle %= DOUBLE_PI
 
+    # анализ нажатых клавиш
     def keys_control(self):
         sin_a = math.sin(self.angle)
         cos_a = math.cos(self.angle)
@@ -91,6 +94,7 @@ class Player:
                 if event.button == 1 and not self.shot:
                     self.shot = True
 
+    # использование мыши для обзора
     def mouse_control(self):
         if pygame.mouse.get_focused():
             difference = pygame.mouse.get_pos()[0] - HALF_WIDTH

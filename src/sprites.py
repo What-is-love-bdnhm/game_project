@@ -6,25 +6,8 @@ from ray_casting import mapping
 
 class Sprites:
     def __init__(self):
+        # параметры спрайтов в одном словаре(идея взята из интернета)
         self.sprite_parameters = {
-            'npc_devil': {
-                'sprite': [pygame.image.load(f'../spr/npc/devil1/base/{i}.png').convert_alpha() for i in range(8)],
-                'viewing_angles': True,
-                'shift': 0.0,
-                'scale': (1.1, 1.1),
-                'side': 50,
-                'animation': [],
-                'death_animation': deque([pygame.image.load(f'../spr/npc/devil1/death/{i}.png')
-                                         .convert_alpha() for i in range(11)]),
-                'is_dead': None,
-                'dead_shift': 0.6,
-                'animation_dist': None,
-                'animation_speed': 10,
-                'blocked': True,
-                'flag': 'npc',
-                'obj_action': deque(
-                    [pygame.image.load(f'../spr/npc/devil1/action/{i}.png').convert_alpha() for i in range(5)]),
-            },
             'npc_soldier0': {
                 'sprite': [pygame.image.load(f'../spr/npc/soldier0/base/{i}.png').convert_alpha() for i in
                            range(8)],
@@ -63,17 +46,19 @@ class Sprites:
                                     .convert_alpha() for i in range(4)])},
         }
 
+        # местоположение объектов
         self.list_of_objects = [
-            SpriteObject(self.sprite_parameters['npc_devil'], (7, 4)),
-            SpriteObject(self.sprite_parameters['npc_soldier0'], (2.5, 1.5)),
-            SpriteObject(self.sprite_parameters['npc_soldier1'], (5.51, 1.5)),
-            SpriteObject(self.sprite_parameters['npc_soldier0'], (6.61, 2.92)),
             SpriteObject(self.sprite_parameters['npc_soldier1'], (7.68, 1.47)),
             SpriteObject(self.sprite_parameters['npc_soldier0'], (8.75, 3.65)),
             SpriteObject(self.sprite_parameters['npc_soldier1'], (1.27, 11.5)),
             SpriteObject(self.sprite_parameters['npc_soldier0'], (1.26, 8.29)),
+            SpriteObject(self.sprite_parameters['npc_soldier0'], (2.5, 1.5)),
+            SpriteObject(self.sprite_parameters['npc_soldier1'], (5.51, 1.5)),
+            SpriteObject(self.sprite_parameters['npc_soldier0'], (6.61, 2.92)),
         ]
 
+
+    # приоритет попадания по ближайшему противнику
     @property
     def sprite_shot(self):
         return min([obj.is_on_fire for obj in self.list_of_objects], default=(float('inf'), 0))
@@ -102,6 +87,7 @@ class SpriteObject:
         self.animation_count = 0
         self.npc_action_trigger = False
         self.delete = False
+        # угол обзора игрока на объекты. корректно работает когда нпс стоят на месте
         if self.viewing_angles:
             if len(self.object) == 8:
                 self.sprite_angles = [frozenset(range(338, 361)) | frozenset(range(0, 23))] + \
@@ -111,16 +97,19 @@ class SpriteObject:
                                      [frozenset(range(i, i + 23)) for i in range(11, 348, 23)]
             self.sprite_positions = {angle: pos for angle, pos in zip(self.sprite_angles, self.object)}
 
+    # проверка попадания по объекту
     @property
     def is_on_fire(self):
         if CENTER_RAY - self.side // 2 < self.current_ray < CENTER_RAY + self.side // 2 and self.blocked:
             return self.distance_to_sprite, self.proj_height
         return float('inf'), None
 
+    # местоположение опирающееся на сетку карты
     @property
     def pos(self):
         return self.x - self.side // 2, self.y - self.side // 2
 
+    # местоположение объектов для отрисовки(идея взята из интернета)
     def object_locate(self, player):
 
         dx, dy = self.x - player.x, self.y - player.y
@@ -160,6 +149,7 @@ class SpriteObject:
         else:
             return (False,)
 
+    # счетчик анимации спрайтов(нужен для корректного порядка отображения картинки)
     def sprite_animation(self):
         if self.animation and self.distance_to_sprite < self.animation_dist:
             sprite_object = self.animation[0]
@@ -171,6 +161,7 @@ class SpriteObject:
             return sprite_object
         return self.object
 
+    # видимость спрайта
     def visible_sprite(self):
         if self.viewing_angles:
             if self.theta < 0:
@@ -182,6 +173,7 @@ class SpriteObject:
                     return self.sprite_positions[angles]
         return self.object
 
+    # анимация смерти
     def dead_animation(self):
         if len(self.death_animation):
             if self.dead_animation_count < self.animation_speed:
@@ -192,6 +184,8 @@ class SpriteObject:
                 self.dead_animation_count = 0
         return self.dead_sprite
 
+
+    # действие нпс
     def npc_in_action(self):
         sprite_object = self.obj_action[0]
         if self.animation_count < self.animation_speed:
