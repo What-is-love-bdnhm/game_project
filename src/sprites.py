@@ -2,6 +2,7 @@ import pygame
 from settings import *
 from collections import deque
 from ray_casting import mapping
+from random import *
 
 
 class Sprites:
@@ -56,6 +57,8 @@ class Sprites:
             SpriteObject(self.sprite_parameters['npc_soldier1'], (5.51, 1.5)),
             SpriteObject(self.sprite_parameters['npc_soldier0'], (6.61, 2.92)),
         ]
+        for _ in range(10):
+            pass
 
 
     # приоритет попадания по ближайшему противнику

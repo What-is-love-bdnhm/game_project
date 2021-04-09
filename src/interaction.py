@@ -52,8 +52,7 @@ class Interaction:
             for obj in sorted(self.sprites.list_of_objects, key=lambda obj: obj.distance_to_sprite):
                 if obj.is_on_fire[1]:
                     if obj.is_dead != 'immortal' and not obj.is_dead:
-                        if ray_casting_npc_player(obj.x, obj.y,
-                                                  world_map, self.player.pos):
+                        if ray_casting_npc_player(obj.x, obj.y, world_map, self.player.pos):
                             if obj.flag == 'npc':
                                 self.pain_sound.play()
                             obj.is_dead = True
@@ -90,3 +89,14 @@ class Interaction:
         pygame.mixer.init()
         pygame.mixer.music.load('../sound/theme.mp3')
         pygame.mixer.music.play(10)
+
+    def check_win(self):
+        if not len([obj for obj in self.sprites.list_of_objects if obj.flag == 'npc' and not obj.is_dead]):
+            pygame.mixer.music.stop()
+            pygame.mixer.music.load('../sound/win.mp3')
+            pygame.mixer.music.play()
+            while True:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        exit()
+                self.drawing.win()

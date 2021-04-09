@@ -32,11 +32,15 @@ while True:
     drawing.mini_map(player)  # миникарта
     drawing.player_weapon([wall_shot, sprites.sprite_shot])  # отрисовка оружия
 
-    interaction.interaction_objects()  # анализ взаимодействия игрока с предметами
+    interaction.interaction_objects()
     interaction.npc_action()  # анализ действия нпс. на данный момент бесполезно без ии
     interaction.clear_world()  # удаление мертвых объектов из списка для анализа
 
     pygame.draw.circle(sc, (0, 255, 0), (HALF_WIDTH, HALF_HEIGHT), 5, 1)  # прицел
+
+    interaction.check_win()
+
+
 
     pygame.display.flip()
     clock.tick(FPS)

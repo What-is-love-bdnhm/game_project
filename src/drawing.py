@@ -35,10 +35,7 @@ class Drawing:
         self.shot_animation_count = 0
         self.shot_animation_trigger = True
         self.shot_sound = pygame.mixer.Sound('../sound/shotgun.wav')
-        # sfx parameters
-        self.sfx = deque([pygame.image.load(f'../spr/weapons/sfx/{i}.png').convert_alpha() for i in range(9)])
-        self.sfx_length_count = 0
-        self.sfx_length = len(self.sfx)
+
 
     # отрисовка заднего фона(небо и земля)
     def background(self, angle):
@@ -77,7 +74,6 @@ class Drawing:
         if self.player.shot:
             if not self.shot_length_count:
                 self.shot_sound.play()
-            self.shot_projection = min(shots)[1] // 2
             shot_sprite = self.weapon_shot_animation[0]
             self.sc.blit(shot_sprite, self.weapon_pos)
             self.shot_animation_count += 1
@@ -123,7 +119,7 @@ class Drawing:
             self.sc.blit(exit, (button_exit.centerx - 85, button_exit.centery - 70))
 
             color = 255
-            label = label_font.render('testpy', 1, (color, color, color))
+            label = label_font.render('doompy', 1, (color, color, color))
             self.sc.blit(label, (15, -30))
 
             mouse_pos = pygame.mouse.get_pos()
@@ -142,3 +138,12 @@ class Drawing:
 
             pygame.display.flip()
             self.clock.tick(20)
+
+    def win(self):
+        render = self.font_win.render('YOU WIN!!!', 1, (randrange(40, 120), 0, 0))
+        rect = pygame.Rect(0, 0, 1000, 300)
+        rect.center = HALF_WIDTH, HALF_HEIGHT
+        pygame.draw.rect(self.sc, BLACK, rect, border_radius=50)
+        self.sc.blit(render, (rect.centerx - 430, rect.centery - 140))
+        pygame.display.flip()
+        self.clock.tick(15)
