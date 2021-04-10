@@ -68,7 +68,7 @@ class Drawing:
         map_x, map_y = player.x // MAP_SCALE, player.y // MAP_SCALE
         pygame.draw.line(self.sc_map, (0, 255, 0), (map_x, map_y), (map_x + 12 * math.cos(player.angle),
                                                                     map_y + 12 * math.sin(player.angle)), 2)
-        pygame.draw.circle(self.sc_map, RED, (int(map_x), int(map_y)), 3)
+        pygame.draw.circle(self.sc_map, RED, (int(map_x), int(map_y)), 5)
         for x, y in mini_map:
             pygame.draw.rect(self.sc_map, DARKBROWN, (x, y, MAP_TILE, MAP_TILE))
         self.sc.blit(self.sc_map, MAP_POS)

@@ -90,20 +90,7 @@ class Interaction:
         pygame.mixer.music.load('../sound/theme.mp3')
         pygame.mixer.music.play(10)
 
-
-    # def check_pause(self):
-    #     if self.player.pause:
-    #         while self.player.pause:
-    #             pygame.mouse.set_visible(True)
-    #             for event in pygame.event.get():
-    #                 if event.type == pygame.QUIT:
-    #                     exit()
-    #                 if event.type == pygame.KEYDOWN:
-    #                     if event.key == pygame.K_ESCAPE:
-    #                         self.player.not_pause()
-    #                         pygame.mouse.set_visible(False)
-    #         print('work')
-
+    # проверка наличия живых противников на карте
     def check_win(self):
         if not len([obj for obj in self.sprites.list_of_objects if obj.flag == 'npc' and not obj.is_dead]):
             pygame.mixer.music.stop()
