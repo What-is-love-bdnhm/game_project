@@ -14,15 +14,19 @@ class Drawing:
         self.player = player
         self.clock = clock
         self.font = pygame.font.SysFont('Arial', 36, bold=True)
-        self.font_win = pygame.font.Font('../font/font.ttf', 144)
+        self.font_win = pygame.font.Font('../font/font.ttf', 140)
         self.textures = {1: pygame.image.load('../res/wall1.png').convert(),
                          2: pygame.image.load('../res/wall2.png').convert(),
                          3: pygame.image.load('../res/wall3.png').convert(),
                          4: pygame.image.load('../res/wall4.png').convert(),
+                         5: pygame.image.load('../res/wall5.png').convert(),
+                         6: pygame.image.load('../res/wall6.png').convert(),
+                         7: pygame.image.load('../res/secret.png').convert(),
                          'S': pygame.image.load('../res/sky.png').convert()
                          }
 
         self.menu_trigger = True
+        self.pause_trigger = False
 
         self.weapon_base_sprite = pygame.image.load('../spr/weapons/shotgun/base/0.png').convert_alpha()
         self.weapon_shot_animation = deque([pygame.image.load(f'../spr/weapons/shotgun/shot/{i}.png').convert_alpha()
@@ -139,11 +143,16 @@ class Drawing:
             pygame.display.flip()
             self.clock.tick(20)
 
+
+    # окно выигрыша
     def win(self):
-        render = self.font_win.render('YOU WIN!!!', 1, (randrange(40, 120), 0, 0))
+        render = self.font_win.render('Stage clear', 1, RED)
         rect = pygame.Rect(0, 0, 1000, 300)
         rect.center = HALF_WIDTH, HALF_HEIGHT
         pygame.draw.rect(self.sc, BLACK, rect, border_radius=50)
-        self.sc.blit(render, (rect.centerx - 430, rect.centery - 140))
+        self.sc.blit(render, (rect.centerx - 450, rect.centery - 140))
         pygame.display.flip()
         self.clock.tick(15)
+        pygame.mouse.set_visible(True)
+
+

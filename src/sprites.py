@@ -2,7 +2,8 @@ import pygame
 from settings import *
 from collections import deque
 from ray_casting import mapping
-from random import *
+import random
+from map import free_place
 
 
 class Sprites:
@@ -48,18 +49,13 @@ class Sprites:
         }
 
         # местоположение объектов
-        self.list_of_objects = [
-            SpriteObject(self.sprite_parameters['npc_soldier1'], (7.68, 1.47)),
-            SpriteObject(self.sprite_parameters['npc_soldier0'], (8.75, 3.65)),
-            SpriteObject(self.sprite_parameters['npc_soldier1'], (1.27, 11.5)),
-            SpriteObject(self.sprite_parameters['npc_soldier0'], (1.26, 8.29)),
-            SpriteObject(self.sprite_parameters['npc_soldier0'], (2.5, 1.5)),
-            SpriteObject(self.sprite_parameters['npc_soldier1'], (5.51, 1.5)),
-            SpriteObject(self.sprite_parameters['npc_soldier0'], (6.61, 2.92)),
-        ]
-        for _ in range(10):
-            pass
 
+        self.list_of_objects = []
+        for _ in range(5):
+            coord = random.choice(free_place)
+            self.list_of_objects.append(
+                SpriteObject(self.sprite_parameters[list(self.sprite_parameters)[random.randint(0, 1)]],
+                             (coord[0] + 0.5, coord[1] + 0.5)))
 
     # приоритет попадания по ближайшему противнику
     @property
@@ -187,7 +183,6 @@ class SpriteObject:
                 self.dead_animation_count = 0
         return self.dead_sprite
 
-
     # действие нпс
     def npc_in_action(self):
         sprite_object = self.obj_action[0]
@@ -197,4 +192,3 @@ class SpriteObject:
             self.obj_action.rotate()
             self.animation_count = 0
         return sprite_object
-

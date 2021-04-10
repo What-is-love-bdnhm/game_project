@@ -18,12 +18,11 @@ interaction = Interaction(player, sprites, drawing)
 
 # отрисовка меню
 drawing.menu()
-# невидимость курсора в окне
-pygame.mouse.set_visible(False)
 # запуск музыки
 interaction.play_music()
 
 while True:
+    pygame.mouse.set_visible(False)
     player.movement()  # анализ нажатия клавиш
     drawing.background(player.angle)  # отрисовка неба и пола
     walls, wall_shot = ray_casting_walls(player, drawing.textures)  # улавливание стен лучами

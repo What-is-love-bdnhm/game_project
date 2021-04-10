@@ -1,17 +1,23 @@
 from settings import *
 import pygame
 import math
-from map import collision_walls
+from map import collision_walls, free_place
+import random
+import sys
+
 
 class Player:
     def __init__(self, sprites):
-        self.x, self.y = player_pos
+        coord = random.choice(free_place)
+        self.x, self.y = coord[0] * 100 + 55, coord[1] * 100 + 50
         self.sprites = sprites
         self.angle = player_angle
         self.sensitivity = 0.004
         self.side = 50
         self.rect = pygame.Rect(*player_pos, self.side, self.side)
         self.shot = False
+        self.pause = False
+
 
     @property
     def pos(self):
@@ -63,7 +69,7 @@ class Player:
         cos_a = math.cos(self.angle)
         keys = pygame.key.get_pressed()
         if keys[pygame.K_ESCAPE]:
-            exit()
+            quit()
 
         if keys[pygame.K_w]:
             dx = player_speed * cos_a
